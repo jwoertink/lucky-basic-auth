@@ -37,7 +37,7 @@ module Lucky::BasicAuthPipe
       show_login = true
       if value = @context.request.headers[AUTH]?
         if value.size > 0 && value.starts_with?(BASIC)
-          username, password = Base64.decode_string(value[BASIC.size + 1..-1]).split(":")
+          {{block.args[0]}}, {{block.args[1]}} = Base64.decode_string(value[BASIC.size + 1..-1]).split(":")
           if {{block.body}}
             show_login = false
           end

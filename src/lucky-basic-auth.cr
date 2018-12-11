@@ -1,7 +1,7 @@
 require "base64"
 
 module Lucky::BasicAuthPipe
-  VERSION               = "0.1.0"
+  VERSION               = "0.1.1"
   BASIC                 = "Basic"
   AUTH                  = "Authorization"
   AUTH_MESSAGE          = "Could not verify your access level.\nYou must login to continue"

@@ -14,11 +14,13 @@ dependencies:
 
 ## Usage
 
+Require the shard
 ```crystal
 # in src/dependencies.cr
 require "lucky-basic-auth"
 ```
 
+Include it in your main BrowserAction
 ```crystal
 # in src/actions/browser_action.cr
 abstract class BrowserAction < Lucky::Action
@@ -29,19 +31,51 @@ abstract class BrowserAction < Lucky::Action
 end
 ```
 
+Or, you can also make a subclass to handle auths
+```crystal
+class AuthorizedAction < BrowserAction
+  include Lucky::BasicAuthPipe
+
+end
+```
+
+Call the `basic_auth` to enable.
 ```crystal
 # in src/actions/whatever/your_action.cr
 class Whatever::YourAction < BrowserAction
-  before authenticate_login
+  basic_auth
 
   #...
 end
 ```
 
+This method requires 2 `ENV` variables to exist. This will check for the username and password to match these variables.
+
+```crystal
+ENV["AUTH_USERNAME"]
+ENV["AUTH_PASSWORD"]
+```
+
+If you need more control over how the values are checked (e.g. lookup from a database, or check role authorization), you can pass a proc.
+
+
+```crystal
+# in src/actions/whatever/your_action.cr
+class Whatever::YourAction < BrowserAction
+  basic_auth ->(user, pass) {
+    user == MY_USERNAME_THING && pass == MY_PASSWORD_CHECKER
+  }
+
+  #...
+end
+```
+
+This gives you the option to set different user and pass per action if you want.
+
 
 ## Development
 
-TODO: Write development instructions here
+write specs
 
 ## Contributing
 

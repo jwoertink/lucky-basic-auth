@@ -33,9 +33,17 @@ end
 
 Or, you can also make a subclass to handle auths
 ```crystal
-class AuthorizedAction < BrowserAction
+# src/actions/authorized_action.cr
+abstract class AuthorizedAction < BrowserAction
   include Lucky::BasicAuthPipe
 
+  basic_auth
+end
+
+class MyAction < AuthorizedAction
+  get "/admin/my_action" do
+    text "I'm secure!"
+  end
 end
 ```
 

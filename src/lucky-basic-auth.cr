@@ -1,7 +1,8 @@
 require "base64"
+require "crypto/subtle"
 
 module Lucky::BasicAuthPipe
-  VERSION               = "0.1.1"
+  VERSION               = "0.1.2"
   BASIC                 = "Basic"
   AUTH                  = "Authorization"
   AUTH_MESSAGE          = "Could not verify your access level.\nYou must login to continue"
@@ -13,7 +14,7 @@ module Lucky::BasicAuthPipe
       if value = @context.request.headers[AUTH]?
         if value.size > 0 && value.starts_with?(BASIC)
           username, password = Base64.decode_string(value[BASIC.size + 1..-1]).split(":")
-          if username == ENV["AUTH_USERNAME"] && ENV["AUTH_PASSWORD"]
+          if compare_values(username, ENV["AUTH_USERNAME"]) && compare_values(password, ENV["AUTH_PASSWORD"])
             show_login = false
           end
         end
@@ -55,5 +56,9 @@ module Lucky::BasicAuthPipe
     end
 
     before authorize
+  end
+
+  private def compare_values(given_value : String, expected_value : String)
+    Crypto::Subtle.constant_time_compare(given_value, expected_value)
   end
 end

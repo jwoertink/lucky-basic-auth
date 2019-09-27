@@ -4,6 +4,8 @@ Adds some basic auth in to your lucky app using a pipe instead of HTTP Handler
 
 ## Installation
 
+Requires Lucky v0.17 or later
+
 1. Add the dependency to your `shard.yml`:
 ```yaml
 dependencies:
@@ -16,7 +18,7 @@ dependencies:
 
 Require the shard
 ```crystal
-# in src/dependencies.cr
+# in src/shards.cr
 require "lucky-basic-auth"
 ```
 
@@ -25,9 +27,12 @@ Include it in your main BrowserAction
 # in src/actions/browser_action.cr
 abstract class BrowserAction < Lucky::Action
   include Lucky::ProtectFromForgery
+
+  # include it
   include Lucky::BasicAuthPipe
 
-  #...
+  # use it
+  basic_auth
 end
 ```
 
@@ -42,7 +47,7 @@ end
 
 class MyAction < AuthorizedAction
   get "/admin/my_action" do
-    text "I'm secure!"
+    plain_text "I'm secure!"
   end
 end
 ```

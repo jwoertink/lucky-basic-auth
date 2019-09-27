@@ -2,7 +2,7 @@ require "base64"
 require "crypto/subtle"
 
 module Lucky::BasicAuthPipe
-  VERSION               = "0.1.2"
+  VERSION               = "0.2.0"
   BASIC                 = "Basic"
   AUTH                  = "Authorization"
   AUTH_MESSAGE          = "Could not verify your access level.\nYou must login to continue"
@@ -21,10 +21,8 @@ module Lucky::BasicAuthPipe
       end
 
       if show_login
-        headers = HTTP::Headers.new
-        @context.response.status_code = 401
         @context.response.headers["WWW-Authenticate"] = HEADER_LOGIN_REQUIRED
-        text AUTH_MESSAGE
+        plain_text AUTH_MESSAGE, status: 401
       else
         continue
       end
@@ -46,10 +44,8 @@ module Lucky::BasicAuthPipe
       end
 
       if show_login
-        headers = HTTP::Headers.new
-        @context.response.status_code = 401
         @context.response.headers["WWW-Authenticate"] = HEADER_LOGIN_REQUIRED
-        text AUTH_MESSAGE
+        plain_text AUTH_MESSAGE, status: 401
       else
         continue
       end
@@ -58,6 +54,7 @@ module Lucky::BasicAuthPipe
     before authorize
   end
 
+  @[AlwaysInline]
   private def compare_values(given_value : String, expected_value : String)
     Crypto::Subtle.constant_time_compare(given_value, expected_value)
   end

@@ -1,4 +1,4 @@
-# lucky-basic-auth [![Build Status](https://travis-ci.com/jwoertink/lucky-basic-auth.svg?branch=master)](https://travis-ci.com/jwoertink/lucky-basic-auth)
+# lucky-basic-auth
 
 Adds some basic auth in to your lucky app using a pipe instead of HTTP Handler
 
